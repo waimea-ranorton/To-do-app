@@ -31,17 +31,43 @@ def show_welcome():
 #-----------------------------------------------------------
 # Creature list page - Show all the creatures
 #-----------------------------------------------------------
-@app.get("/creatures")
-def show_all_creatures():
+@app.get("/task")
+def show_all_tasks():
     with connect_db() as db:
         sql = """
-            SELECT id, species, name
-            FROM creatures
+            SELECT id, name, priority, complete
+            FROM tasks
         """
         params = ()
-        creatures = db.execute(sql, params).fetchall()
+        tasks = db.execute(sql, params).fetchall()
 
-        return render_template("pages/creature_list.jinja", creatures=creatures)
+        return render_template("pages/tasks_list.jinja", tasks=tasks)
+
+#-----------------------------------------------------------
+# Creature list page - Add a new task
+#-----------------------------------------------------------
+@app.post("/task_new")
+def process_task_form():
+    
+    #get form data
+    name = request.form.get("name", "unknown").strip() #default value if no species
+    priority = request.form.get("priority", "unknown").strip()
+
+    #connect to the DB
+    with connect_db() as db:
+        sql = """
+            INSERT INTO tasks (name, priority)
+            VALUES (?, ?)
+        """
+        params = (name, priority)
+
+        #run query
+        db.execute(sql, params)
+
+        flash(f"Task {name} added successfully")
+
+        #done, return to list
+        return redirect("/tasks")
 
 
 #-----------------------------------------------------------
