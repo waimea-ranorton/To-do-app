@@ -20,18 +20,10 @@ app = Flask(__name__)
 # App Routes Handlers
 #===========================================================
 
-#-----------------------------------------------------------
-# Welcome page
+#-----------------------------------------------
+#  Show all the tasks
 #-----------------------------------------------------------
 @app.get("/")
-def show_welcome():
-    return render_template("pages/welcome.jinja")
-
-
-#-----------------------------------------------------------
-# Creature list page - Show all the creatures
-#-----------------------------------------------------------
-@app.get("/task")
 def show_all_tasks():
     with connect_db() as db:
         sql = """
@@ -44,11 +36,10 @@ def show_all_tasks():
         return render_template("pages/tasks_list.jinja", tasks=tasks)
 
 #-----------------------------------------------------------
-# Creature list page - Add a new task
+# Add a new task
 #-----------------------------------------------------------
-@app.post("/task_new")
+@app.post("/task/new")
 def process_task_form():
-    
     #get form data
     name = request.form.get("name", "unknown").strip() #default value if no species
     priority = request.form.get("priority", "unknown").strip()
@@ -69,6 +60,21 @@ def process_task_form():
         #done, return to list
         return redirect("/tasks")
 
+
+#-----------------------------------------------
+# Mark task finished
+#-----------------------------------------------------------
+@app.get("/task/<int:id>/complete")
+def mark_task_done():
+    with connect_db() as db:
+        sql = """
+            SELECT id, name, priority, complete
+            FROM tasks
+        """
+        params = ()
+        tasks = db.execute(sql, params).fetchall()
+
+        return render_template("pages/tasks_list.jinja", tasks=tasks)
 
 #-----------------------------------------------------------
 # Help page - Show some help

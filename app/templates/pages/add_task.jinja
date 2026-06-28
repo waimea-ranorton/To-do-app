@@ -7,25 +7,8 @@
 
 {% block content %}
 
-    <h2>List of Tasks</h2>
+    <h2>New task</h2>
 
-    <section id="tasks">
-
-        {% for task in tasks %}
-
-            <div class="tasks">
-                <h4>{{ task.priority }} - {{ task.name }}</h4>
-            </div>
-
-        {% else %}
-
-            <p>No Tasks!</p>
-
-        {% endfor %}
-
-    </section>
-
-    
     <form method="post" action="/task/new">
         <label>
 
@@ -46,5 +29,5 @@
     
     </form>
 
-{% endblock %}
 
+{% endblock %}
