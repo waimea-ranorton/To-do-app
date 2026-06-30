@@ -7,7 +7,7 @@
 
 {% block content %}
 
-    <h2>List of Tasks</h2>
+     <h2>List of Tasks</h2>
 
     <section id="tasks">
 
@@ -15,17 +15,25 @@
 
             <div class="tasks">
                 <h4>{{ task.priority }} - {{ task.name }}</h4>
+
+                {% if task.complete %}
+                    <a href="/task/{{ task.id }}/complete">🗹</a>
+                {% else %}
+                    <a href="/task/{{ task.id }}/complete">☐</a>
+
+                {% endif %}
+
             </div>
 
         {% else %}
 
             <p>No Tasks!</p>
 
-        {% endfor %}
+        {% endfor %} 
 
     </section>
 
-    
+    <h3>Add task</h3>
     <form method="post" action="/task/new">
         <label>
 
@@ -40,7 +48,6 @@
             <input type="text" name="priority" required>
 
         </label>
-
 
         <button>Add Task</button>
     

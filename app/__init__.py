@@ -58,8 +58,7 @@ def process_task_form():
         flash(f"Task {name} added successfully")
 
         #done, return to list
-        return redirect("/tasks")
-
+        return redirect("/")
 
 #-----------------------------------------------
 # Mark task finished
@@ -75,6 +74,8 @@ def mark_task_done():
         tasks = db.execute(sql, params).fetchall()
 
         return render_template("pages/tasks_list.jinja", tasks=tasks)
+        
+        return redirect("/")
 
 #-----------------------------------------------------------
 # Help page - Show some help
