@@ -29,6 +29,7 @@ def show_all_tasks():
         sql = """
             SELECT id, name, priority, complete
             FROM tasks
+            ORDER By priority ASC
         """
         params = ()
         tasks = db.execute(sql, params).fetchall()
@@ -47,7 +48,7 @@ def process_task_form():
     #connect to the DB
     with connect_db() as db:
         sql = """
-            INSERT INTO tasks (name, priority)
+            INSERT INTO tasks (priority, name)
             VALUES (?, ?)
         """
         params = (name, priority)
@@ -60,21 +61,51 @@ def process_task_form():
         #done, return to list
         return redirect("/")
 
-#-----------------------------------------------
+#-----------------------------------------------------------
 # Mark task finished
 #-----------------------------------------------------------
 @app.get("/task/<int:id>/complete")
-def mark_task_done():
+def mark_task_done(id):
     with connect_db() as db:
         sql = """
-            SELECT id, name, priority, complete
-            FROM tasks
+            UPDATE tasks SET complete = 1 WHERE id = ?
         """
-        params = ()
-        tasks = db.execute(sql, params).fetchall()
+        params = (id,)
+        db.execute(sql, params)
 
-        return render_template("pages/tasks_list.jinja", tasks=tasks)
-        
+        return redirect("/")
+
+#-----------------------------------------------------------
+# Mark task unfinished
+#-----------------------------------------------------------
+@app.get("/task/<int:id>/incomplete")
+def mark_task_not_done(id):
+    with connect_db() as db:
+        sql = """
+            UPDATE tasks SET complete = 0 WHERE id = ?
+        """
+        params = (id,)
+        db.execute(sql, params)
+
+        return redirect("/")        
+
+#-----------------------------------------------------------
+# Task deletion
+#-----------------------------------------------------------
+@app.get("/task/<int:id>/delete")
+def delete_a_task(id):
+    with connect_db() as db:
+        ##delete task using its id
+        sql = """
+            DELETE FROM tasks
+            WHERE id=?
+        """
+        params = (id,)
+        db.execute(sql, params)
+
+
+        flash("task deleted", "success")
+##back to list
         return redirect("/")
 
 #-----------------------------------------------------------

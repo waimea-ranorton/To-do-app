@@ -60,7 +60,7 @@ body > header {
         gap: 1rem;
 
         a {
-            color: var(--accent-col);
+            color: var(:rgb(0, 162, 255); );
         }
     }
 }
@@ -110,4 +110,10 @@ main > h2 {
     }
 }
 
+a {
+    color:rgb(0, 162, 255); 
+}
 
+.tasks {
+    display: flex
+}

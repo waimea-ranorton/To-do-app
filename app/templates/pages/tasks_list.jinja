@@ -17,13 +17,16 @@
                 <h4>{{ task.priority }} - {{ task.name }}</h4>
 
                 {% if task.complete %}
-                    <a href="/task/{{ task.id }}/complete">🗹</a>
+                    <a href="/task/{{ task.id }}/incomplete">🗹</a>
                 {% else %}
                     <a href="/task/{{ task.id }}/complete">☐</a>
 
                 {% endif %}
-
+            
             </div>
+            {% if task %}
+                    <a href="/task/{{ task.id }}/delete">delete</a>
+                {% endif %}
 
         {% else %}
 
